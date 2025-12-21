@@ -18,28 +18,47 @@ function copyEventData(button) {
     });
 }
 
-function showRestoreConfirmation(button) {
+async function showRestoreConfirmation(button) {
     // Find the parent event div and then the event-content div
     const eventDiv = button.closest('.event');
     const contentDiv = eventDiv.querySelector('.event-content');
     const eventData = contentDiv.getAttribute('data-content');
-    
+
     // Parse the event data
     const event = JSON.parse(eventData);
-    
+
+    // Check if the event belongs to the current user
+    if (!window.nostr) {
+        alert('Nostr extension not found. Please install a Nostr extension like Alby, nos2x or Flue.');
+        return;
+    }
+
+    try {
+        const userPubkey = await window.nostr.getPublicKey();
+
+        // Check if the event pubkey matches the user's pubkey
+        if (event.pubkey !== userPubkey) {
+            alert('You can only restore events that belong to your own npub.');
+            return;
+        }
+    } catch (error) {
+        console.error('Error getting user public key:', error);
+        alert('Error verifying your identity. Please make sure your Nostr extension is properly configured.');
+        return;
+    }
+
     // Define the relays to send to
     const relays = [
         "wss://relay.damus.io",
-        "wss://nostr-pub.wellorder.net", 
-        "wss://relay.nostr.band",
-        "wss://nostr-relay.nokotaro.com",
-        "wss://nostr.bitcoiner.social"
+        "wss://nos.lol",
+        "wss://yabu.me",
+        "wss://nostr.compile-error.net"
     ];
-    
+
     // Show confirmation dialog
     const relayList = relays.join('\n');
     const confirmed = confirm(`Restore this event to the following relays?\n\n${relayList}`);
-    
+
     if (confirmed) {
         restoreEvent(event, relays);
     }

@@ -1,0 +1,126 @@
+/* Basic styles for the Nostr Event Restore Service */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    margin-top: 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.search-box {
+    text-align: center;
+    margin: 30px 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+input[type="text"] {
+    width: 300px;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+button {
+    padding: 12px 24px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0069d9;
+}
+
+.events-container {
+    margin-top: 30px;
+}
+
+.event {
+    border: 1px solid #e1e1e1;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    background-color: #fafafa;
+}
+
+.event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.event-kind {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.9em;
+}
+
+.event-timestamp {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.event-content {
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
+
+.event-id {
+    font-family: monospace;
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 15px;
+    word-break: break-all;
+}
+
+.back-link {
+    margin-bottom: 20px;
+}
+
+.back-link a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+}
+
+footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    color: #666;
+    font-size: 0.9em;
+}

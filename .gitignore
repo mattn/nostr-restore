@@ -1,0 +1,4 @@
+*.env
+*.sh
+k8s
+nostr-restore

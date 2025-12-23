@@ -248,24 +248,31 @@ func npubHandler(db *sql.DB) http.HandlerFunc {
         </div>
 
         <div class="events-container">
+            {{$currentKind := -1}}
             {{range .Events}}
-            <div class="event">
-                <div class="event-header">
-                    <div class="event-header-left">
-                        <span class="event-timestamp">{{.GetFormattedDate}}</span>
-                        <span class="event-kind">Kind {{.Kind}}</span>
+                {{if ne .Kind $currentKind}}
+                    {{if ne $currentKind -1}}</div>{{end}}
+                    <div class="kind-group">
+                        <h2 class="kind-header">Kind {{.Kind}}</h2>
+                    {{$currentKind = .Kind}}
+                {{end}}
+                <div class="event">
+                    <div class="event-header">
+                        <div class="event-header-left">
+                            <span class="event-timestamp">{{.GetFormattedDate}}</span>
+                        </div>
+                        <div class="event-actions">
+                            {{if eq .Kind 3}}<button class="restore-btn" onclick="showRestoreConfirmation(this)">Restore</button>{{end}}
+                            <button class="copy-btn" onclick="copyEventData(this)">Copy</button>
+                        </div>
                     </div>
-                    <div class="event-actions">
-                        {{if eq .Kind 3}}<button class="restore-btn" onclick="showRestoreConfirmation(this)">Restore</button>{{end}}
-                        <button class="copy-btn" onclick="copyEventData(this)">Copy</button>
-                    </div>
+                    <div class="event-content" data-content="{{.EventData}}"><pre style="white-space: pre-wrap; word-break: break-all;">{{.EventData}}</pre></div>
+                    <div class="event-id">{{.ID}}</div>
                 </div>
-                <div class="event-content" data-content="{{.EventData}}"><pre style="white-space: pre-wrap; word-break: break-all;">{{.EventData}}</pre></div>
-                <div class="event-id">{{.ID}}</div>
-            </div>
             {{else}}
-            <p>No events found for this pubkey.</p>
+                <p>No events found for this pubkey.</p>
             {{end}}
+            {{if gt (len .Events) 0}}</div>{{end}}
         </div>
         <footer>
             <p>Nostr Event Restore Service &copy; 2025</p>
@@ -327,9 +334,8 @@ func npubToHex(npub string) (string, error) {
 
 // queryEventsByPubkey retrieves events from event_backup table by pubkey
 func queryEventsByPubkey(db *sql.DB, pubkey string) ([]Event, error) {
-	// Use the correct column name event_data
-	// Sort by created_at DESC (newest first) as primary sort, and event_kind ASC as secondary
-	query := `SELECT id, pubkey, created_at, event_kind, event_data FROM event_backup WHERE pubkey = $1 ORDER BY created_at DESC, event_kind ASC`
+	// Sort by event_kind ASC (0 to higher), then by created_at DESC (newest first)
+	query := `SELECT id, pubkey, created_at, event_kind, event_data FROM event_backup WHERE pubkey = $1 ORDER BY event_kind ASC, created_at DESC`
 	rows, err := db.Query(query, pubkey)
 	if err != nil {
 		return nil, err

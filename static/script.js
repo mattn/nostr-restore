@@ -56,12 +56,31 @@ async function showRestoreConfirmation(button) {
     ];
 
     // Show confirmation dialog
-    const relayList = relays.join('\n');
-    const confirmed = confirm(`Restore this event to the following relays?\n\n${relayList}`);
+    const relayList = relays.join('<br>');
 
-    if (confirmed) {
-        restoreEvent(event, relays);
+    if (typeof Swal === 'undefined') {
+        console.warn('SweetAlert2 not loaded; falling back to confirm()');
+        const fallbackConfirmed = confirm(`Restore this event to the following relays?\n\n${relays.join('\n')}`);
+        if (fallbackConfirmed) {
+            restoreEvent(event, relays);
+        }
+        return;
     }
+
+    Swal.fire({
+        title: 'Restore this event?',
+        html: `<p style="margin:0 0 6px;">Relays to publish to:</p><pre style="text-align:left;white-space:pre-wrap;">${relayList}</pre>`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Restore',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        focusCancel: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            restoreEvent(event, relays);
+        }
+    });
 }
 
 async function restoreEvent(event, relays) {

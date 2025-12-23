@@ -69,11 +69,24 @@ button:hover {
 
 .event-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 12px;
     margin-bottom: 15px;
     padding-bottom: 10px;
     border-bottom: 1px solid #eee;
+}
+
+.event-header-left {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.event-actions {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .event-kind {
@@ -88,6 +101,7 @@ button:hover {
 .event-timestamp {
     color: #666;
     font-size: 0.9em;
+    font-weight: 600;
 }
 
 .event-content {
@@ -102,6 +116,7 @@ button:hover {
     margin-top: 15px;
     word-break: break-all;
 }
+
 
 .back-link {
     margin-bottom: 20px;

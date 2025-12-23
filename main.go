@@ -145,6 +145,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nostr Event Restore Service</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/static/script.js"></script>
 </head>
 <body>
@@ -223,6 +224,7 @@ func npubHandler(db *sql.DB) http.HandlerFunc {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Events for {{.Profile.Name}}</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/static/script.js"></script>
 </head>
 <body>
@@ -249,10 +251,14 @@ func npubHandler(db *sql.DB) http.HandlerFunc {
             {{range .Events}}
             <div class="event">
                 <div class="event-header">
-                    <span class="event-kind">Kind {{.Kind}}</span>
-                    <span class="event-timestamp">{{.GetFormattedDate}}</span>
-                    {{if eq .Kind 3}}<button class="restore-btn" onclick="showRestoreConfirmation(this)">Restore</button>{{end}}
-                    <button class="copy-btn" onclick="copyEventData(this)">Copy</button>
+                    <div class="event-header-left">
+                        <span class="event-timestamp">{{.GetFormattedDate}}</span>
+                        <span class="event-kind">Kind {{.Kind}}</span>
+                    </div>
+                    <div class="event-actions">
+                        {{if eq .Kind 3}}<button class="restore-btn" onclick="showRestoreConfirmation(this)">Restore</button>{{end}}
+                        <button class="copy-btn" onclick="copyEventData(this)">Copy</button>
+                    </div>
                 </div>
                 <div class="event-content" data-content="{{.EventData}}"><pre style="white-space: pre-wrap; word-break: break-all;">{{.EventData}}</pre></div>
                 <div class="event-id">{{.ID}}</div>
@@ -261,7 +267,6 @@ func npubHandler(db *sql.DB) http.HandlerFunc {
             <p>No events found for this pubkey.</p>
             {{end}}
         </div>
-
         <footer>
             <p>Nostr Event Restore Service &copy; 2025</p>
         </footer>

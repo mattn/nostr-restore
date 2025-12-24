@@ -61,11 +61,13 @@ func fetchProfileFromRelays(pubkey string) (*UserProfile, error) {
 		"wss://nostr.compile-error.net",
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
+	log.Printf("Attempting to fetch profile for pubkey %s from %d relays", pubkey, len(relays))
 	pool := nostr.NewSimplePool(ctx)
 	ev := pool.QuerySingle(ctx, relays, filter)
+	log.Printf("QuerySingle completed. Event found: %v", ev != nil)
 
 	if ev != nil {
 		log.Printf("Profile event found for pubkey %s: content length=%d", pubkey, len(ev.Content))

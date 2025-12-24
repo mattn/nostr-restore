@@ -55,7 +55,8 @@ func fetchProfileFromRelays(pubkey string) (*UserProfile, error) {
 
 	// Try common public relays
 	relays := []string{
-		"wss://relay.damus.io",
+		//"wss://relay.damus.io",
+		"wss://nos.lol",
 		"wss://yabu.me",
 		"wss://nostr.compile-error.net",
 	}

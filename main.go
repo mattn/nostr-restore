@@ -50,7 +50,7 @@ func fetchProfileFromRelays(pubkey string) (*UserProfile, error) {
 	filter := nostr.Filter{
 		Authors: []string{pubkey},
 		Kinds:   []int{0},
-		Limit:   1,
+		//Limit:   1,
 	}
 
 	// Try common public relays

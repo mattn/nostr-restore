@@ -22,6 +22,9 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 # Final stage: use scratch as base image
 FROM scratch
 
+# Copy CA certificates for HTTPS/WSS connections
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+
 # Copy the binary from builder stage
 COPY --from=builder /app/main /main
 

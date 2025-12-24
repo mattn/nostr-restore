@@ -67,16 +67,19 @@ func fetchProfileFromRelays(pubkey string) (*UserProfile, error) {
 	ev := pool.QuerySingle(ctx, relays, filter)
 
 	if ev != nil {
+		log.Printf("Profile event found for pubkey %s: content length=%d", pubkey, len(ev.Content))
 		var profile UserProfile
 		err := json.Unmarshal([]byte(ev.Content), &profile)
 		if err != nil {
 			log.Printf("Failed to unmarshal profile from event: %v", err)
 			return &UserProfile{}, nil
 		}
+		log.Printf("Successfully parsed profile: name=%s, picture=%s", profile.Name, profile.Picture)
 		return &profile, nil
 	}
 
 	// If no profile found, return empty profile
+	log.Printf("No profile event found for pubkey %s from relays", pubkey)
 	return &UserProfile{}, nil
 }
 

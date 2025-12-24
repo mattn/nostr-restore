@@ -266,9 +266,9 @@ func npubHandler(db *sql.DB) http.HandlerFunc {
                             <button class="copy-btn" onclick="copyEventData(this)">Copy</button>
                         </div>
                     </div>
-                    <detail>
+                    <details>
                         <div class="event-content" data-content="{{.EventData}}"><pre style="white-space: pre-wrap; word-break: break-all;">{{.EventData}}</pre></div>
-                    </detail>
+                    </details>
                     <div class="event-id">{{.ID}}</div>
                 </div>
             {{else}}

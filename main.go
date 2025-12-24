@@ -60,38 +60,20 @@ func fetchProfileFromRelays(pubkey string) (*UserProfile, error) {
 		"wss://nostr.compile-error.net",
 	}
 
-	ctx := context.Background()
-	for _, relayURL := range relays {
-		relay, err := nostr.RelayConnect(ctx, relayURL)
-		if err != nil {
-			log.Printf("Failed to connect to relay %s: %v", relayURL, err)
-			continue
-		}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
-		ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
-		evs, err := relay.Subscribe(ctx, []nostr.Filter{filter})
-		if err != nil {
-			cancel()
-			relay.Close()
-			log.Printf("Failed to subscribe to relay %s: %v", relayURL, err)
-			continue
-		}
+	pool := nostr.NewSimplePool(ctx)
+	ev := pool.QuerySingle(ctx, relays, filter)
 
-		for ev := range evs.Events {
-			if ev.Kind == 0 {
-				var profile UserProfile
-				err := json.Unmarshal([]byte(ev.Content), &profile)
-				if err != nil {
-					log.Printf("Failed to unmarshal profile from event: %v", err)
-					continue
-				}
-				cancel()
-				relay.Close()
-				return &profile, nil
-			}
+	if ev != nil {
+		var profile UserProfile
+		err := json.Unmarshal([]byte(ev.Content), &profile)
+		if err != nil {
+			log.Printf("Failed to unmarshal profile from event: %v", err)
+			return &UserProfile{}, nil
 		}
-		cancel()
-		relay.Close()
+		return &profile, nil
 	}
 
 	// If no profile found, return empty profile
